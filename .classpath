@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="var" path="USER_HOME/IdeaProjects/untitled/lib/clojure.jar"/>
+	<classpathentry kind="var" path="USER_HOME/docs/fht/06/Thesis/res/TrAP/TrAP.jar"/>
+	<classpathentry kind="lib" path="/home/weigla/IdeaProjects/untitled/lib/clojure.jar"/>
+	<classpathentry kind="lib" path="classes"/>
+	<classpathentry kind="lib" path="/home/weigla/docs/fht/06/Thesis/res/TrAP/TrAP.jar"/>
+	<classpathentry kind="output" path="bin/production/trapclj"/>
+</classpath>
