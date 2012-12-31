@@ -1,13 +1,17 @@
 # trapclj
+===============================================================================
 
-A Clojure library designed to ... well, that part is up to you.
+    License:         BSD 
+    Author:          Alexander Weigl <weigla@fh-trier.de>
+    Date:            31. Dec 2012
+    Documentation:   
+
+A Clojure library that provides bindings for TrAP[1] (Trierer Automatenpaket)
+All dependencies are provided. Please respect the license of the third-party
+parts.
+
+[^1] http://trap.fh-trier.de
 
 ## Usage
 
-FIXME
-
-## License
-
-Copyright © 2012 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+call the ``run.sh``
