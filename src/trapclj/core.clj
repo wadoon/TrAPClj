@@ -1,5 +1,7 @@
 (ns trapclj.core)
 
+(load-file "combinatorics.clj")
+
 (import '(de.fhtrier.trap.algorithms.implementation.deaalgorithms
            DeaComplement
            DeaDecideEmptiness
@@ -173,6 +175,14 @@
   (map (fn [x] x)
        (.getAllStates automaton)))
 
+(defn sigma [dfa]
+  (map (fn [x] x)
+       (.getSigma dfa)))
+  
+(defn acceptable-states [dfa]
+  (filter (fn [x] (.isAccepting dfa x))
+	  (states dfa)))
+
 (defn transitions [automaton]
   (map (fn [t]
          (list (.getStartState t)
@@ -232,8 +242,19 @@
             (save-fa d (str "dfa_" cnt))))          
         (recur (+ 1 cnt))))))
 
+(defn rewrite-to-python [filename]
+  (with-open [r (java.io.PushbackReader.
+                 (clojure.java.io/reader filename))]
+    (binding [*read-eval* false]
+      (loop [cnt 0]
+        (let [raw-dfa (read r)]
+          (let [d (dfa-minimization (apply dfa raw-dfa))]
+            (spit d (str "dfa_" cnt))))        
+        (recur (+ 1 cnt))))))
 
-(def pg (dfa '(p q) '(\a \b) '( (p \a p) (q \a q) (p \b q) (q \b p) ) 'p '(q)))
+
+
+;;(def pg (dfa '(p q) '(\a \b) '( (p \a p) (q \a q) (p \b q) (q \b p) ) 'p '(q)))
 
 (defn enumerate 
   ([s]   (enumerate s 0))
@@ -291,39 +312,42 @@
   (map dfa-complement languages))
 
 (def S "(a+b+c)")
-(def sth-base (map dfa-from-regex
-                   (list (str S \a S \b S \c S)
-                         (str S \b S \a S \c S)
-                         (str S \c S \a S \b S)
-                         (str S \b S \c S \a S)
-                         (str S \c S \b S \a S)
-                         (str S \a S \c S \b S))))
-                         
-(def ddh-base (map dfa-from-regex (list 
-                           (str \a \a S \b S \c)
-                           (str \b \a S \b S \c)
-                           (str \c \a S \b S \c)
-                           (str \a \b S \b S \c)
-                           (str \a \c S \b S \c)
-                           (str \b \b S \b S \c)
-                           (str \c \c S \b S \c)
-                           (str \b \c S \b S \c)
-                           (str \c \b S \a S \b)
-                           (str \a \b S \c S \b)
-                           (str \a \c S \a S \c)
-                           (str \a \c S \c S \c))))
-                  
+(def sth-base (map dfa-minimization 
+		   (map dfa-from-regex
+			(list (str S \a S \b S \c S)
+			      ;; (str S \b S \a S \c S)
+			      (str S \c S \a S \b S)
+			      ;; (str S \b S \c S \a S)
+			      (str S \c S \b S \a S)
+			      (str S \a S \c S \b S)))))
+     
+(def ddh-base (map dfa-minimization 
+		   (map dfa-from-regex 
+			(list 
+			 (str \a \a S \b S \c)
+			 (str \b \a S \b S \c)
+			 (str \c \a S \b S \c)
+			 (str \a \b S \b S \c)
+			 (str \a \c S \b S \c)
+			 (str \b \b S \b S \c)
+			 (str \c \c S \b S \c)
+			 (str \b \c S \b S \c)
+			 (str \c \b S \a S \b)
+			 (str \a \b S \c S \b)
+			 (str \a \c S \a S \c)
+			 (str \a \c S \c S \c)))))
+     
 (defn level1 [lc]
   (boolean-closure lc))
 
 (defn level32 [lc]
-  (concat-closure-until-length (level1 lc) 4))
+  (concat-closure-until-length (level1 lc) 2))
 
 (defn level2 [lc]
  (boolean-closure (level32 lc)))
 
 (defn level52 [lc]
-  (concat-closure-until-length (level2 lc) 4))
+  (concat-closure-until-length (level2 lc) 2))
  
 
 
